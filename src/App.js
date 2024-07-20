@@ -35,7 +35,7 @@ function App() {
         }
     }, [userInfo.module]);
 
-    const fetchQuestions = async () => {
+      const fetchQuestions = async () => {
         const sheetName = userInfo.module === 'SKT' ? SHEET_NAME_L1_QUESTIONS : SHEET_NAME_QUESTIONS;
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${sheetName}?key=${API_KEY}`;
 
@@ -69,6 +69,8 @@ function App() {
     };
 
     const handleSubmitQuiz = async () => {
+        const endTime = new Date();
+        const duration = (endTime - startTime) / 1000; // Duration in seconds
         const correctAnswers = questions.filter((question, index) => question.options[0] === answers[index]);
         const score = correctAnswers.length;
         setScore(score);
@@ -86,7 +88,20 @@ function App() {
             }
         );
 
-        if (response.ok) {
+        const analyticsResponse = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME_ANALYTICS}!A1:D1:append?valueInputOption=USER_ENTERED&key=${API_KEY}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    values: [[userInfo.name, userInfo.email, duration, score]],
+                }),
+            }
+        );
+
+        if (response.ok && analyticsResponse.ok) {
             setIsQuizCompleted(true);
         } else {
             console.error('Error submitting quiz');
@@ -114,7 +129,7 @@ function App() {
                             <option value="SKT">SKT</option>
                             <option value="PKT">PKT</option>
                         </select>
-                        <button onClick={() => setUserInfo({ ...userInfo, name: userInfo.name.trim(), email: userInfo.email.trim() })}>
+                        <button onClick={() => { setUserInfo({ ...userInfo, name: userInfo.name.trim(), email: userInfo.email.trim() }); setStartTime(new Date()); }}>
                             Start Quiz
                         </button>
                     </div>
