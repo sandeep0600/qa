@@ -244,13 +244,18 @@ function App() {
                     onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
                     required
                 />
-                <input
-                    type="text"
-                    placeholder="Department"
+                <select
                     value={userInfo.department}
                     onChange={(e) => setUserInfo({ ...userInfo, department: e.target.value })}
                     required
-                />
+                >
+                    <option value="" disabled>Select Department</option>
+                    {departmentOptions.map(department => (
+                        <option key={department} value={department}>
+                            {department}
+                        </option>
+                    ))}
+                </select>
                 <select
                     value={userInfo.module}
                     onChange={(e) => setUserInfo({ ...userInfo, module: e.target.value })}
@@ -270,6 +275,7 @@ function App() {
             <div className="quiz-completed">
                 <h1>Quiz Completed!</h1>
                 <p>Your score is: {score}/{questions.length}</p>
+                
             </div>
         );
     }
@@ -279,12 +285,12 @@ function App() {
             <div className="timer">Time Left: {Math.floor(timer / 60)}:{timer % 60}</div>
             {questions.map(question => (
                 <div key={question.id} className="question">
-                    <h2>{question.text}</h2>
+                    <p>{question.text}</p>
                     {question.options.map(option => (
                         <label key={option}>
                             <input
                                 type="radio"
-                                name={`question-${question.id}`}
+                                name={question.id}
                                 value={option}
                                 checked={responses[question.id] === option}
                                 onChange={() => handleResponseChange(question.id, option)}
