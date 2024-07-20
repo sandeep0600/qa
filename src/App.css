@@ -79,23 +79,6 @@ p {
     color: #666;
 }
 
-/* Question Styles */
-.question {
-    font-size: 1.4rem; /* Increased font size for questions */
-    font-weight: bold;
-    padding: 12px; /* Increased padding */
-    margin-bottom: 15px; /* Adjusted margin */
-    border-radius: 8px;
-    background-color: #f8f9fa;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.question p {
-    margin: 0;
-    font-size: 1.3rem; /* Slightly larger font size for question text */
-}
-
 /* Animations */
 @keyframes fadeIn {
     from {
@@ -154,14 +137,5 @@ p {
     select,
     button {
         font-size: 0.9rem;
-    }
-
-    .question {
-        font-size: 1.2rem; /* Slightly smaller font size for small screens */
-        padding: 8px;
-    }
-
-    .question p {
-        font-size: 1.1rem; /* Slightly smaller font size for small screens */
     }
 }
