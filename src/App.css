@@ -79,6 +79,45 @@ p {
     color: #666;
 }
 
+/* Quiz App Container */
+.quiz-app {
+    width: 100%;
+    max-width: 800px;
+    padding: 30px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.8s ease-out;
+    overflow-y: auto;
+    height: 80vh;
+}
+
+.timer {
+    font-size: 1.5rem;
+    color: #d9534f;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+.question p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.question label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.question input[type="radio"] {
+    margin-right: 8px;
+}
+
 /* Animations */
 @keyframes fadeIn {
     from {
@@ -138,4 +177,10 @@ p {
     button {
         font-size: 0.9rem;
     }
+
+    .quiz-app {
+        height: 90vh;
+        padding: 20px;
+    }
 }
+
