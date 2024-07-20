@@ -20,11 +20,11 @@ body {
 /* Quiz Container */
 .quiz-container {
     width: 100%;
-    max-width: 800px;
-    padding: 20px;
+    max-width: 600px; /* Reduced max-width */
+    padding: 15px; /* Reduced padding */
     border-radius: 12px;
     background: #fff;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     animation: fadeIn 0.8s ease-out;
     overflow-y: auto; /* Allow vertical scrolling if needed */
     max-height: 90vh; /* Ensure container doesn't exceed viewport height */
@@ -32,38 +32,38 @@ body {
 
 /* Title */
 h1 {
-    font-size: 2rem; /* Smaller title font size */
+    font-size: 1.5rem; /* Smaller title font size */
     color: #007BFF;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Reduced margin */
     animation: slideIn 0.6s ease-out;
 }
 
 /* Question Styles */
 .question {
-    font-size: 1.5rem; /* Smaller font size for questions */
+    font-size: 1.2rem; /* Smaller font size for questions */
     font-weight: bold;
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 10px; /* Reduced padding */
+    margin-bottom: 10px; /* Reduced margin */
     border-radius: 8px;
     background-color: #f8f9fa;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     animation: fadeInUp 0.8s ease-out;
 }
 
 .question p {
     margin: 0;
-    font-size: 1.4rem; /* Adjusted for prominence */
+    font-size: 1.1rem; /* Smaller font size for question text */
 }
 
 /* Answer Options */
 .option {
     display: block;
-    padding: 10px 15px;
-    margin: 8px 0;
+    padding: 8px 12px; /* Reduced padding */
+    margin: 6px 0; /* Reduced margin */
     border-radius: 6px;
     background-color: #e9ecef;
     cursor: pointer;
-    font-size: 0.9rem; /* Smaller font size for options */
+    font-size: 0.8rem; /* Smaller font size for options */
     transition: background-color 0.3s, transform 0.2s;
 }
 
@@ -74,11 +74,11 @@ h1 {
 
 /* Timer */
 .timer {
-    font-size: 1.5rem; /* Smaller timer font size */
+    font-size: 1.2rem; /* Smaller timer font size */
     font-weight: bold;
     color: #e74c3c;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Reduced margin */
     animation: pulse 1.5s infinite;
 }
 
@@ -145,24 +145,24 @@ h1 {
 /* Responsive Design */
 @media (max-width: 600px) {
     body {
-        font-size: 14px;
+        font-size: 12px; /* Smaller base font size for small screens */
     }
 
     .quiz-container {
-        padding: 15px;
-    }
-
-    .question {
-        font-size: 1.2rem;
         padding: 10px;
     }
 
+    .question {
+        font-size: 1rem; /* Smaller font size for small screens */
+        padding: 8px;
+    }
+
     .option {
-        font-size: 0.8rem; /* Smaller font size for smaller screens */
-        padding: 8px 12px;
+        font-size: 0.7rem; /* Even smaller font size for small screens */
+        padding: 6px 10px;
     }
 
     .timer {
-        font-size: 1.2rem; /* Adjusted timer size for small screens */
+        font-size: 1rem; /* Smaller timer size for small screens */
     }
 }
