@@ -79,7 +79,7 @@ function App() {
         try {
             await gapi.client.sheets.spreadsheets.values.append({
                 spreadsheetId: SHEET_ID,
-                range: 'Responses!A1:G1', // Adjust the range if needed
+                range: 'Responses!A1:AG1', // Adjust the range if needed
                 valueInputOption: 'USER_ENTERED',
                 resource: {
                     values: [responseArray],
@@ -114,7 +114,7 @@ function App() {
     const handleStartQuiz = async () => {
         if (userInfo.name && userInfo.department && userInfo.module) {
             if (existingEmails.includes(userEmail)) {
-                alert('You have already submitted the quiz with this email.');
+                alert('You have already submitted the quiz.');
                 return;
             }
             setAutoSubmitEnabled(true);
@@ -261,7 +261,6 @@ function App() {
             <div className="quiz-completed">
                 <h1>Quiz Completed!</h1>
                 <p>Your score is: {score}/{questions.length}</p>
-                <button onClick={handleReset}>Start New Quiz</button>
             </div>
         );
     }
