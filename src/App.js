@@ -20,6 +20,15 @@ function App() {
     const [autoSubmitEnabled, setAutoSubmitEnabled] = useState(false);
     const [userEmail, setUserEmail] = useState('');
 
+    const departmentOptions = [
+        'Sales Call Center (CSR)',
+        'L1-Support',
+        'Front desk',
+        'Inside Valley D2D',
+        'Outside Valley D2D',
+        'Billing/Digital Support'
+    ];
+
     const fetchQuestions = async () => {
         const sheetName = userInfo.module === 'SKT' ? 'L1Questions' : 'Questions';
 
