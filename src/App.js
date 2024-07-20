@@ -29,281 +29,122 @@ function App() {
         'Billing/Digital Support'
     ];
 
-    const fetchQuestions = async () => {
-        const sheetName = userInfo.module === 'SKT' ? 'L1Questions' : 'Questions';
-
-        try {
-            const response = await gapi.client.sheets.spreadsheets.values.get({
-                spreadsheetId: SHEET_ID,
-                range: `${sheetName}!A:F`
-            });
-            const data = response.result.values;
-
-            if (data) {
-                const formattedQuestions = data.slice(1).map((row, index) => ({
-                    id: index,
-                    text: row[0],
-                    options: row.slice(1, -1),
-                    correctAnswer: row[row.length - 1],
-                }));
-                setQuestions(formattedQuestions);
-            } else {
-                console.error('No data found in the specified range');
-            }
-        } catch (error) {
-            console.error('Error fetching questions:', error);
-        }
-    };
-
-    const fetchExistingEmails = async () => {
-        try {
-            const response = await gapi.client.sheets.spreadsheets.values.get({
-                spreadsheetId: SHEET_ID,
-                range: 'Responses!E:E' // Assuming emails are in column E
-            });
-            const data = response.result.values;
-            if (data) {
-                setExistingEmails(data.flat());
-            }
-        } catch (error) {
-            console.error('Error fetching existing emails:', error);
-        }
-    };
-
-    const submitQuiz = async () => {
-        const timestamp = new Date().toISOString();
-        const calculatedScore = calculateScore();
-        setScore(calculatedScore);
-        
-        const responseArray = [
-            timestamp, 
-            userInfo.name, 
-            userInfo.department, 
-            userInfo.module, 
-            userEmail, // Add user's email
-            ...Object.values(responses),
-            `${calculatedScore}/${questions.length}` // Add score to responses
-        ];
-
-        try {
-            await gapi.client.sheets.spreadsheets.values.append({
-                spreadsheetId: SHEET_ID,
-                range: 'Responses!A1:AG1', // Adjust the range if needed
-                valueInputOption: 'USER_ENTERED',
-                resource: {
-                    values: [responseArray],
-                },
-            });
-            console.log('Submit result:', responseArray);
-        } catch (error) {
-            console.error('Error submitting quiz:', error);
-        }
-
-        setQuizCompleted(true);
-        setAutoSubmitEnabled(false); // Disable auto-submit after submission
-    };
-
-    const calculateScore = () => {
-        let score = 0;
-        questions.forEach(question => {
-            if (responses[question.id] === question.correctAnswer) {
-                score++;
-            }
-        });
-        return score;
-    };
-
-    const handleResponseChange = (questionId, selectedOption) => {
-        setResponses(prevResponses => ({
-            ...prevResponses,
-            [questionId]: selectedOption,
-        }));
-    };
-
-    const handleStartQuiz = async () => {
-        if (userInfo.name && userInfo.department && userInfo.module) {
-            if (existingEmails.includes(userEmail)) {
-                alert('You have already submitted the quiz.');
-                return;
-            }
-            setAutoSubmitEnabled(true);
-            setQuizStarted(true);
+    useEffect(() => {
+        if (userInfo.module) {
             fetchQuestions();
+        }
+    }, [userInfo.module]);
+
+    const fetchQuestions = async () => {
+        const sheetName = userInfo.module === 'SKT' ? SHEET_NAME_L1_QUESTIONS : SHEET_NAME_QUESTIONS;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${sheetName}?key=${API_KEY}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        const questionsData = data.values.slice(1).map((row, index) => ({
+            id: index + 1,
+            question: row[0],
+            options: row.slice(1),
+        }));
+        setQuestions(questionsData);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setUserInfo({ ...userInfo, [name]: value });
+    };
+
+    const handleAnswerChange = (selectedOption) => {
+        const newAnswers = [...answers];
+        newAnswers[currentQuestionIndex] = selectedOption;
+        setAnswers(newAnswers);
+    };
+
+    const handleNextQuestion = () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
-            alert('Please fill in all the fields');
+            handleSubmitQuiz();
         }
     };
 
-    useEffect(() => {
-        function start() {
-            gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-                scope: SCOPES,
-            }).then(() => {
-                const authInstance = gapi.auth2.getAuthInstance();
-                setIsSignedIn(authInstance.isSignedIn.get());
-                authInstance.isSignedIn.listen(setIsSignedIn);
+    const handleSubmitQuiz = async () => {
+        const correctAnswers = questions.filter((question, index) => question.options[0] === answers[index]);
+        const score = correctAnswers.length;
+        setScore(score);
 
-                if (authInstance.isSignedIn.get()) {
-                    const currentUser = authInstance.currentUser.get();
-                    setUserEmail(currentUser.getBasicProfile().getEmail());
-                }
-
-                fetchExistingEmails(); // Fetch existing emails on load
-            }).catch(error => console.error('GAPI initialization error:', error));
-        }
-        gapi.load('client:auth2', start);
-    }, []);
-
-    useEffect(() => {
-        if (quizStarted) {
-            const timerId = setInterval(() => {
-                setTimer(prev => {
-                    if (prev <= 0) {
-                        clearInterval(timerId);
-                        if (!quizCompleted) {
-                            submitQuiz();
-                        }
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-
-            return () => clearInterval(timerId);
-        }
-    }, [quizStarted]);
-
-    useEffect(() => {
-        const handleVisibilityChange = () => {
-            if (autoSubmitEnabled && document.visibilityState === 'hidden' && !quizCompleted) {
-                submitQuiz();
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME_RESPONSES}!A1:E1:append?valueInputOption=USER_ENTERED&key=${API_KEY}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    values: [[userInfo.name, userInfo.email, userInfo.department, answers.join(','), `${score}/${questions.length}`]],
+                }),
             }
-        };
+        );
 
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-        };
-    }, [autoSubmitEnabled, quizCompleted]);
-
-    const handleReset = () => {
-        setUserInfo({ name: '', department: '', module: '' });
-        setResponses({});
-        setTimer(600);
-        setQuizStarted(false);
-        setQuizCompleted(false);
-        setScore(null);
-        setAutoSubmitEnabled(false);
-        setUserEmail(''); // Clear email on reset
-    };
-
-    useEffect(() => {
-        document.addEventListener('keydown', handleKeydown);
-        document.addEventListener('paste', handlePaste);
-
-        return () => {
-            document.removeEventListener('keydown', handleKeydown);
-            document.removeEventListener('paste', handlePaste);
-        };
-    }, []);
-
-    const handleKeydown = (event) => {
-        if (event.ctrlKey || event.metaKey) {
-            if (event.key === 'v') {
-                event.preventDefault();
-                alert('Copy-pasting is disabled');
-            }
+        if (response.ok) {
+            setIsQuizCompleted(true);
+        } else {
+            console.error('Error submitting quiz');
         }
     };
-
-    const handlePaste = (event) => {
-        event.preventDefault();
-        alert('Copy-pasting is disabled');
-    };
-
-    if (!isSignedIn) {
-        return (
-            <div className="user-info-form">
-                <button onClick={() => gapi.auth2.getAuthInstance().signIn()}>Sign In with Google</button>
-            </div>
-        );
-    }
-
-    if (!quizStarted) {
-        return (
-            <div className="user-info-form">
-                <h1>Start Quiz</h1>
-                <input
-                    type="text"
-                    placeholder="Name"
-                    value={userInfo.name}
-                    onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
-                    required
-                />
-                <select
-                    value={userInfo.department}
-                    onChange={(e) => setUserInfo({ ...userInfo, department: e.target.value })}
-                    required
-                >
-                    <option value="" disabled>Select Department</option>
-                    {departmentOptions.map(department => (
-                        <option key={department} value={department}>
-                            {department}
-                        </option>
-                    ))}
-                </select>
-                <select
-                    value={userInfo.module}
-                    onChange={(e) => setUserInfo({ ...userInfo, module: e.target.value })}
-                    required
-                >
-                    <option value="" disabled>Select Module</option>
-                    <option value="SKT">SKT</option>
-                    <option value="PKT">PKT</option>
-                </select>
-                <button onClick={handleStartQuiz}>Start Quiz</button>
-            </div>
-        );
-    }
-
-    if (quizCompleted) {
-        return (
-            <div className="quiz-completed">
-                <h1>Quiz Completed!</h1>
-                <p>Your score is: {score}/{questions.length}</p>
-                
-            </div>
-        );
-    }
 
     return (
-        <div className="quiz-app">
-            <div className="timer">Time Left: {Math.floor(timer / 60)}:{timer % 60}</div>
-            {questions.map(question => (
-                <div key={question.id} className="question">
-                    <p>{question.text}</p>
-                    {question.options.map(option => (
-                        <label key={option}>
-                            <input
-                                type="radio"
-                                name={question.id}
-                                value={option}
-                                checked={responses[question.id] === option}
-                                onChange={() => handleResponseChange(question.id, option)}
-                            />
-                            {option}
-                        </label>
-                    ))}
+        <div className="quiz-container">
+            {!isQuizCompleted ? (
+                !userInfo.name ? (
+                    <div className="user-info-form">
+                        <h1>Enter Your Information</h1>
+                        <input type="text" name="name" placeholder="Name" value={userInfo.name} onChange={handleInputChange} />
+                        <input type="text" name="email" placeholder="Email" value={userInfo.email} onChange={handleInputChange} />
+                        <select name="department" value={userInfo.department} onChange={handleInputChange}>
+                            <option value="">Select Department</option>
+                            <option value="Sales Call Center (CSR)">Sales Call Center (CSR)</option>
+                            <option value="L1-Support">L1-Support</option>
+                            <option value="Front desk">Front desk</option>
+                            <option value="Inside Valley D2D">Inside Valley D2D</option>
+                            <option value="Outside Valley D2D">Outside Valley D2D</option>
+                            <option value="Billing/Digital Support">Billing/Digital Support</option>
+                        </select>
+                        <select name="module" value={userInfo.module} onChange={handleInputChange}>
+                            <option value="SKT">SKT</option>
+                            <option value="PKT">PKT</option>
+                        </select>
+                        <button onClick={() => setUserInfo({ ...userInfo, name: userInfo.name.trim(), email: userInfo.email.trim() })}>
+                            Start Quiz
+                        </button>
+                    </div>
+                ) : (
+                    <div className="question-container">
+                        <div className="question">
+                            <p>{questions[currentQuestionIndex]?.question}</p>
+                        </div>
+                        <div className="options">
+                            {questions[currentQuestionIndex]?.options.map((option, index) => (
+                                <div key={index} className="option" onClick={() => handleAnswerChange(option)}>
+                                    {option}
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={handleNextQuestion}>
+                            {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Submit Quiz'}
+                        </button>
+                    </div>
+                )
+            ) : (
+                <div className="completion-container">
+                    <h1>Quiz Completed!</h1>
+                    <p>Your score is: {score}/{questions.length}</p>
+                    <button onClick={() => window.location.reload()}>Start New Quiz</button>
                 </div>
-            ))}
-            <button onClick={submitQuiz}>Submit</button>
+            )}
         </div>
     );
-}
+};
 
 export default App;
 
