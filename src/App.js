@@ -275,7 +275,7 @@ function App() {
             <div className="quiz-completed">
                 <h1>Quiz Completed!</h1>
                 <p>Your score is: {score}/{questions.length}</p>
-                
+                <button onClick={handleReset}>Restart</button>
             </div>
         );
     }
