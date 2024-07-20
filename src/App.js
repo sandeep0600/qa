@@ -1,33 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { gapi } from 'gapi-script';
 import './App.css';
 
-const CLIENT_ID = '1055049298013-ej1eaico8ofgq5onkmel4640us6r5f4q.apps.googleusercontent.com';
+const SPREADSHEET_ID = '1f1vCtTVOmLhhzyuO2b0vo9YCCl6DxjciZMqQC3F0iuQ';
+const SHEET_NAME_RESPONSES = 'Responses';
+const SHEET_NAME_ANALYTICS = 'Analytics';
+const SHEET_NAME_L1_QUESTIONS = 'L1Questions';
+const SHEET_NAME_QUESTIONS = 'Questions';
 const API_KEY = 'AIzaSyDbdoT_4oTySin22j5wi5yx_IDzs3Vfbnc';
-const SHEET_ID = '1f1vCtTVOmLhhzyuO2b0vo9YCCl6DxjciZMqQC3F0iuQ';
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
-function App() {
-    const [isSignedIn, setIsSignedIn] = useState(false);
+const App = () => {
+    const [userInfo, setUserInfo] = useState({ name: '', email: '', department: '', module: 'SKT' });
     const [questions, setQuestions] = useState([]);
-    const [responses, setResponses] = useState({});
-    const [timer, setTimer] = useState(600); // 10 minutes
-    const [userInfo, setUserInfo] = useState({ name: '', department: '', module: '' });
-    const [quizStarted, setQuizStarted] = useState(false);
-    const [quizCompleted, setQuizCompleted] = useState(false);
-    const [score, setScore] = useState(null);
-    const [existingEmails, setExistingEmails] = useState([]);
-    const [autoSubmitEnabled, setAutoSubmitEnabled] = useState(false);
-    const [userEmail, setUserEmail] = useState('');
-
-    const departmentOptions = [
-        'Sales Call Center (CSR)',
-        'L1-Support',
-        'Front desk',
-        'Inside Valley D2D',
-        'Outside Valley D2D',
-        'Billing/Digital Support'
-    ];
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [answers, setAnswers] = useState([]);
+    const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+    const [score, setScore] = useState(0);
+    const [startTime, setStartTime] = useState(null);
 
     useEffect(() => {
         if (userInfo.module) {
@@ -35,7 +23,7 @@ function App() {
         }
     }, [userInfo.module]);
 
-      const fetchQuestions = async () => {
+    const fetchQuestions = async () => {
         const sheetName = userInfo.module === 'SKT' ? SHEET_NAME_L1_QUESTIONS : SHEET_NAME_QUESTIONS;
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${sheetName}?key=${API_KEY}`;
 
@@ -162,6 +150,7 @@ function App() {
 };
 
 export default App;
+
 
 // Disable right-click
 document.addEventListener('contextmenu', (event) => {
