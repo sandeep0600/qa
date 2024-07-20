@@ -79,6 +79,75 @@ p {
     color: #666;
 }
 
+/* Question Styles */
+.question-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.8s ease-out;
+    text-align: center;
+}
+
+.question {
+    font-size: 1.4rem; /* Increased font size for questions */
+    font-weight: bold;
+    padding: 12px; /* Increased padding */
+    margin-bottom: 15px; /* Adjusted margin */
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.question p {
+    margin: 0;
+    font-size: 1.3rem; /* Slightly larger font size for question text */
+}
+
+/* Options Styles */
+.options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.option {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.option:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Completion Styles */
+.completion-container {
+    text-align: center;
+}
+
+.completion-container h1 {
+    font-size: 2rem;
+    color: #007BFF;
+}
+
+.completion-container p {
+    font-size: 1.2rem;
+    color: #333;
+}
+
 /* Animations */
 @keyframes fadeIn {
     from {
@@ -137,5 +206,14 @@ p {
     select,
     button {
         font-size: 0.9rem;
+    }
+
+    .question {
+        font-size: 1.2rem; /* Slightly smaller font size for small screens */
+        padding: 8px;
+    }
+
+    .question p {
+        font-size: 1.1rem; /* Slightly smaller font size for small screens */
     }
 }
