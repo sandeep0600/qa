@@ -9,77 +9,91 @@ body {
     font-family: 'Arial', sans-serif;
     background: #f5f5f5;
     color: #333;
-    overflow: hidden; /* Prevent body from scrolling */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
+    overflow: hidden;
 }
 
-/* Quiz Container */
-.quiz-container {
+/* User Info Form Container */
+.user-info-form {
     width: 100%;
-    max-width: 600px; /* Reduced max-width */
-    padding: 15px; /* Reduced padding */
-    border-radius: 12px;
+    max-width: 500px;
+    padding: 30px;
+    border-radius: 8px;
     background: #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     animation: fadeIn 0.8s ease-out;
-    overflow-y: auto; /* Allow vertical scrolling if needed */
-    max-height: 90vh; /* Ensure container doesn't exceed viewport height */
+    text-align: center;
 }
 
-/* Title */
 h1 {
-    font-size: 1.5rem; /* Smaller title font size */
+    font-size: 2rem;
     color: #007BFF;
-    margin-bottom: 15px; /* Reduced margin */
+    margin-bottom: 20px;
     animation: slideIn 0.6s ease-out;
+}
+
+input[type="text"],
+select {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin: 10px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+input[type="text"]:focus,
+select:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+button {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin: 20px 12px;
+    border-radius: 4px;
+    border: none;
+    background-color: #007BFF;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    animation: bounceIn 0.6s ease-out;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
 }
 
 /* Question Styles */
 .question {
-    font-size: 1.2rem; /* Smaller font size for questions */
+    font-size: 1.4rem; /* Increased font size for questions */
     font-weight: bold;
-    padding: 10px; /* Reduced padding */
-    margin-bottom: 10px; /* Reduced margin */
+    padding: 12px; /* Increased padding */
+    margin-bottom: 15px; /* Adjusted margin */
     border-radius: 8px;
     background-color: #f8f9fa;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
     animation: fadeInUp 0.8s ease-out;
 }
 
 .question p {
     margin: 0;
-    font-size: 1.1rem; /* Smaller font size for question text */
-}
-
-/* Answer Options */
-.option {
-    display: block;
-    padding: 8px 12px; /* Reduced padding */
-    margin: 6px 0; /* Reduced margin */
-    border-radius: 6px;
-    background-color: #e9ecef;
-    cursor: pointer;
-    font-size: 0.8rem; /* Smaller font size for options */
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.option:hover {
-    background-color: #dee2e6;
-    transform: scale(1.02);
-}
-
-/* Timer */
-.timer {
-    font-size: 1.2rem; /* Smaller timer font size */
-    font-weight: bold;
-    color: #e74c3c;
-    text-align: center;
-    margin-bottom: 15px; /* Reduced margin */
-    animation: pulse 1.5s infinite;
+    font-size: 1.3rem; /* Slightly larger font size for question text */
 }
 
 /* Animations */
@@ -108,7 +122,7 @@ h1 {
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -130,39 +144,24 @@ h1 {
     }
 }
 
-@keyframes pulse {
-    0% {
-        color: #e74c3c;
-    }
-    50% {
-        color: #ff6f61;
-    }
-    100% {
-        color: #e74c3c;
-    }
-}
-
 /* Responsive Design */
 @media (max-width: 600px) {
     body {
-        font-size: 12px; /* Smaller base font size for small screens */
+        font-size: 14px;
     }
 
-    .quiz-container {
-        padding: 10px;
+    input[type="text"],
+    select,
+    button {
+        font-size: 0.9rem;
     }
 
     .question {
-        font-size: 1rem; /* Smaller font size for small screens */
+        font-size: 1.2rem; /* Slightly smaller font size for small screens */
         padding: 8px;
     }
 
-    .option {
-        font-size: 0.7rem; /* Even smaller font size for small screens */
-        padding: 6px 10px;
-    }
-
-    .timer {
-        font-size: 1rem; /* Smaller timer size for small screens */
+    .question p {
+        font-size: 1.1rem; /* Slightly smaller font size for small screens */
     }
 }
