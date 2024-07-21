@@ -13,30 +13,30 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    overflow: hidden;
+    overflow: auto; /* Changed from hidden to auto */
 }
 
-/* User Info Form Container */
-.user-info-form {
+.user-info-form, .quiz-app {
     width: 100%;
     max-width: 500px;
     padding: 30px;
     border-radius: 8px;
     background: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.8s ease-out;
     text-align: center;
+    margin: 10px; /* Added margin for better mobile spacing */
+    overflow-y: auto; /* Ensure scrolling within the form */
 }
 
 h1 {
     font-size: 2rem;
     color: #007BFF;
     margin-bottom: 20px;
-    animation: slideIn 0.6s ease-out;
 }
 
 input[type="text"],
-select {
+select,
+button {
     width: calc(100% - 24px);
     padding: 12px;
     margin: 10px 12px;
@@ -45,27 +45,21 @@ select {
     font-size: 1rem;
     outline: none;
     transition: border-color 0.3s, box-shadow 0.3s;
-    animation: fadeInUp 0.6s ease-out;
 }
 
 input[type="text"]:focus,
-select:focus {
+select:focus,
+button:hover {
     border-color: #007BFF;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
 button {
-    width: calc(100% - 24px);
-    padding: 12px;
-    margin: 20px 12px;
-    border-radius: 4px;
     border: none;
     background-color: #007BFF;
     color: #fff;
-    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    animation: bounceIn 0.6s ease-out;
 }
 
 button:hover {
@@ -79,93 +73,6 @@ p {
     color: #666;
 }
 
-/* Quiz App Container */
-.quiz-app {
-    width: 100%;
-    max-width: 800px;
-    padding: 30px;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.8s ease-out;
-    overflow-y: auto;
-    height: 80vh;
-}
-
-.timer {
-    font-size: 1.5rem;
-    color: #d9534f;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.question {
-    margin-bottom: 20px;
-}
-
-.question p {
-    font-size: 1rem;
-    margin-bottom: 10px;
-}
-
-.question label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-}
-
-.question input[type="radio"] {
-    margin-right: 8px;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-100px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes bounceIn {
-    0% {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
 /* Responsive Design */
 @media (max-width: 600px) {
     body {
@@ -177,10 +84,18 @@ p {
     button {
         font-size: 0.9rem;
     }
-
-    .quiz-app {
-        height: 90vh;
-        padding: 20px;
-    }
 }
 
+.timer {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin: 5px 0;
+}
