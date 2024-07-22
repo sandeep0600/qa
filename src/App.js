@@ -257,24 +257,26 @@ function App() {
     return (
         <div className="quiz-app">
             <div className="timer">Time Left: {Math.floor(timer / 60)}:{timer % 60}</div>
-            {questions.map(question => (
-                <div key={question.id} className="question">
-                    <p>{question.text}</p>
-                    {question.options.map(option => (
-                        <label key={option}>
-                            <input
-                                type="radio"
-                                name={question.id}
-                                value={option}
-                                checked={responses[question.id] === option}
-                                onChange={() => handleResponseChange(question.id, option)}
-                            />
-                            {option}
-                        </label>
-                    ))}
-                </div>
-            ))}
-            <button onClick={submitQuiz}>Submit</button>
+            <div className="questions-container">
+                {questions.map(question => (
+                    <div key={question.id} className="question">
+                        <p>{question.text}</p>
+                        {question.options.map(option => (
+                            <label key={option}>
+                                <input
+                                    type="radio"
+                                    name={question.id}
+                                    value={option}
+                                    checked={responses[question.id] === option}
+                                    onChange={() => handleResponseChange(question.id, option)}
+                                />
+                                {option}
+                            </label>
+                        ))}
+                    </div>
+                ))}
+            </div>
+            <button className="submit-button" onClick={submitQuiz}>Submit</button>
         </div>
     );
 }
