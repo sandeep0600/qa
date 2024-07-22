@@ -1,35 +1,134 @@
-        transform: translateY(0);
-    }
+* {
+    box-sizing: border-box;
 }
 
-@keyframes bounceIn {
-    0% {
-        transform: scale(0.9);
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
         opacity: 0;
     }
-    50% {
-        transform: scale(1.1);
+    to {
         opacity: 1;
-    }
-    100% {
-        transform: scale(1);
     }
 }
 
-/* Responsive Design */
+.user-info-form, .quiz-app, .quiz-completed {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.timer {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        color: #000;
+    }
+    50% {
+        color: #f00;
+    }
+}
+
+.questions-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+.question p {
+    font-weight: bold;
+}
+
+.question label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.submit-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.quiz-completed p {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
 @media (max-width: 600px) {
-    body {
-        font-size: 14px;
+    .user-info-form, .quiz-app, .quiz-completed {
+        width: 100%;
+        border-radius: 0;
     }
 
-    input[type="text"],
-    select,
-    button {
-        font-size: 0.9rem;
-    }
-
-    .quiz-app {
-        height: 90vh;
-        padding: 20px;
+    .questions-container {
+        max-height: 300px;
     }
 }
