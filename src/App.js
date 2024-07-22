@@ -8,7 +8,6 @@ const SHEET_ID = '1f1vCtTVOmLhhzyuO2b0vo9YCCl6DxjciZMqQC3F0iuQ';
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
 function App() {
-    const [isSignedIn, setIsSignedIn] = useState(false);
     const [questions, setQuestions] = useState([]);
     const [responses, setResponses] = useState({});
     const [timer, setTimer] = useState(600); // 10 minutes
@@ -18,7 +17,6 @@ function App() {
     const [score, setScore] = useState(null);
     const [existingEmails, setExistingEmails] = useState([]);
     const [autoSubmitEnabled, setAutoSubmitEnabled] = useState(false);
-    const [userEmail, setUserEmail] = useState('');
 
     const departmentOptions = [
         'Sales Call Center (CSR)',
@@ -80,7 +78,6 @@ function App() {
             userInfo.name, 
             userInfo.department, 
             userInfo.module, 
-            userEmail, // Add user's email
             ...Object.values(responses),
             `${calculatedScore}/${questions.length}` // Add score to responses
         ];
@@ -122,10 +119,6 @@ function App() {
 
     const handleStartQuiz = async () => {
         if (userInfo.name && userInfo.department && userInfo.module) {
-            if (existingEmails.includes(userEmail)) {
-                alert('You have already submitted the quiz.');
-                return;
-            }
             setAutoSubmitEnabled(true);
             setQuizStarted(true);
             fetchQuestions();
@@ -138,23 +131,13 @@ function App() {
         function start() {
             gapi.client.init({
                 apiKey: API_KEY,
-                clientId: CLIENT_ID,
                 discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
                 scope: SCOPES,
             }).then(() => {
-                const authInstance = gapi.auth2.getAuthInstance();
-                setIsSignedIn(authInstance.isSignedIn.get());
-                authInstance.isSignedIn.listen(setIsSignedIn);
-
-                if (authInstance.isSignedIn.get()) {
-                    const currentUser = authInstance.currentUser.get();
-                    setUserEmail(currentUser.getBasicProfile().getEmail());
-                }
-
                 fetchExistingEmails(); // Fetch existing emails on load
             }).catch(error => console.error('GAPI initialization error:', error));
         }
-        gapi.load('client:auth2', start);
+        gapi.load('client', start);
     }, []);
 
     useEffect(() => {
@@ -198,7 +181,6 @@ function App() {
         setQuizCompleted(false);
         setScore(null);
         setAutoSubmitEnabled(false);
-        setUserEmail(''); // Clear email on reset
     };
 
     useEffect(() => {
@@ -224,14 +206,6 @@ function App() {
         event.preventDefault();
         alert('Copy-pasting is disabled');
     };
-
-    if (!isSignedIn) {
-        return (
-            <div className="user-info-form">
-                <button onClick={() => gapi.auth2.getAuthInstance().signIn()}>Sign In with Google</button>
-            </div>
-        );
-    }
 
     if (!quizStarted) {
         return (
