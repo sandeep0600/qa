@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { gapi } from 'gapi-script';
 import './App.css';
 
-const CLIENT_ID = '1055049298013-ej1eaico8ofgq5onkmel4640us6r5f4q.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyDbdoT_4oTySin22j5wi5yx_IDzs3Vfbnc';
 const SHEET_ID = '1f1vCtTVOmLhhzyuO2b0vo9YCCl6DxjciZMqQC3F0iuQ';
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
 function App() {
     const [questions, setQuestions] = useState([]);
@@ -135,9 +133,7 @@ function App() {
         function start() {
             gapi.client.init({
                 apiKey: API_KEY,
-                clientId: CLIENT_ID,
                 discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-                scope: SCOPES,
             }).then(() => {
                 fetchExistingNames(); // Fetch existing names on load
             }).catch(error => console.error('GAPI initialization error:', error));
